@@ -1,0 +1,22 @@
+.container {
+    width: 466px;
+    height: 466px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.title {
+    width: 300px;
+    height: 60px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.clock {
+    width: 300px;
+    height: 80px;
+    font-size: 72px;
+    text-align: center;
+    margin-bottom: 50px;
+}

@@ -1,0 +1,20 @@
+<div class="container" >
+    <div class="head" on:click="onTitleClick" style="background-color:{{ titleBgColor }};">
+        <text class="title">
+            {{ title }}
+        </text>
+    </div>
+    <stack class="listData">
+        <text class="itemName">Loading..</text>
+        <list id="imglist" class="listData" on:swipe="touchMove">
+            <list-item for="{{dataList}}" class="listItem">
+                <stack class="stackItem">
+                    <div class="progress" style="width:{{$item.progress}}px;"></div>
+                    <image class="itemBack" src="/res/images/icon_{{$item.icon}}.png"
+                           onclick="onItemClick({{$item.id}},{{$item.status}})"></image>
+                    <text class="itemName">{{$item.src}}</text>
+                </stack>
+            </list-item>
+        </list>
+    </stack>
+</div>

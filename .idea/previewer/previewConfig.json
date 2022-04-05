@@ -1,0 +1,15 @@
+{
+ "1.0.0": {
+  "LastPreviewDevice": {
+   "C:\\Huawei\\dev\\com.m0tral.Clock\\entry\\build\\intermediates\\res\\debug": [
+    "liteWearable"
+   ],
+   "C:\\Huawei\\dev\\com.m0tral.Clock\\entry\\build\\intermediates\\res\\release": [
+    "liteWearable"
+   ],
+   "C:\\Huawei\\dev\\com.m0tral.Clock\\entry\\.preview\\intermediates\\res\\debug": [
+    "liteWearable"
+   ]
+  }
+ }
+}

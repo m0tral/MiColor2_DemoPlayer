@@ -1,0 +1,77 @@
+.container {
+    justify-content: center;
+    align-items: center;
+    left: 0px;
+    top: 0px;
+    width: 466px;
+    height: 466px;
+    flex-direction: column;
+}
+
+.head {
+    width: 466px;
+    height: 60px;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.title {
+    font-size: 30px;
+    text-align: center;
+    width: 466px;
+    height: 45px;
+}
+
+.info {
+    width: 400px;
+    height: 20px;
+    background-color: darkblue;
+}
+
+.listData {
+    width: 466px;
+    height: 406px;
+    background-color: #101010;
+    flex-direction: column;
+}
+
+.listItem {
+    width: 466px;
+    height: 100px;
+    justify-content: center;
+}
+
+.stackItem {
+    width: 466px;
+    height: 100px;
+    text-align: center;
+}
+
+.progress {
+    top: 88px;
+    height: 6px;
+    background-color: #008800;
+}
+
+.itemBack {
+    left: 30px;
+    top: 2px;
+    width: 393px;
+    height: 80px;
+    text-align: center;
+}
+
+.itemName {
+    left: 120px;
+    top: 20px;
+    width: 280px;
+    height: 50px;
+    text-overflow: ellipsis;
+}
+
+.itemNameScroll {
+    left: 120px;
+    top: 20px;
+    width: 280px;
+    height: 50px;
+}
