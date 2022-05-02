@@ -35,6 +35,12 @@
     flex-direction: column;
 }
 
+.errData {
+    width: 466px;
+    height: 406px;
+    justify-content: center;
+}
+
 .listItem {
     width: 466px;
     height: 100px;

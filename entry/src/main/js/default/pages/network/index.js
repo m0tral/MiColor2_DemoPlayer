@@ -27,6 +27,8 @@ export default {
         playerStatus: "ready",
         scrollTimer: -1,
         downloading: false,
+        gotError: false,
+        errorDescription: "",
         progress: 0,
         token: "",
     },
@@ -56,6 +58,8 @@ export default {
 
     loadRemoteList() {
 
+        this.gotError = false;
+
         if (this.isWifiAvailable) {
 
             fetch.fetch({
@@ -73,8 +77,10 @@ export default {
                     this.updateSongList(e.data);
                 },
                 fail: (e) => {
+                    this.gotError = true;
+                    this.errorDescription = "net: " + e;
                     this.dataList.push({
-                        src: 'net: ' + e,
+                        src: '' + e,
                         id: 0
                     });
                 }
@@ -89,6 +95,8 @@ export default {
                     this.updateSongList(data);
                 },
                 fail: (e) => {
+                    this.gotError = true;
+                    this.errorDescription = "fs: " + e;
                     this.dataList.push({
                         src: 'fs: ' + e,
                         id: 0
