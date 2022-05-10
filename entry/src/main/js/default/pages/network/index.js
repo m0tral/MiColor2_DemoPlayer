@@ -5,12 +5,13 @@ import request from '@system.request';
 import file from '@system.file';
 import brightness from '@system.brightness';
 import audio from '@system.audio';
+import interconnect from '@system.interconnect';
 
 const ICON_DOWNLOAD = "download";
 const ICON_DOWNLOAD_ACTIVE = "download_a";
 const ICON_PLAY = "play";
 const ICON_PAUSE = "pause";
-const URI_PLAYLIST = "internal://app/playlist.txt";
+const URI_PLAYLIST = "internal://app/playlist";
 
 export default {
 
@@ -19,7 +20,8 @@ export default {
         fileList: [],
         dataList: [],
         isWifiAvailable: false,
-        baseUrl: "https://www.conversmod.ru:3443",
+        baseUrl: "https://cmod.h1n.ru",
+        album: "music",
         titleBgColor: "#000000",
         activeItemId: -1,
         activeItemSrc: "",
@@ -35,7 +37,7 @@ export default {
 
     onInit() {
 
-        var caller = this.src;
+        this.album = this.src;
 
         network.subscribe({
             type: "WIFI",
@@ -47,6 +49,10 @@ export default {
 
                 this.loadLocalList();
                 this.loadRemoteList();
+
+                //interconnect.send({
+                //    data: { data: "net subscribed" },
+                //})
             },
         });
 
@@ -63,32 +69,41 @@ export default {
         if (this.isWifiAvailable) {
 
             fetch.fetch({
-                url: this.baseUrl + "/micolor/list",
+                url: this.baseUrl + "/app/list?album=" + this.album,
                 method: "GET",
                 success: (e) => {
 
                     let jsonText = JSON.stringify(e.data);
 
                     file.writeText({
-                        uri: URI_PLAYLIST,
+                        uri: URI_PLAYLIST +"_"+ this.album + ".txt",
                         text: jsonText
                     });
 
                     this.updateSongList(e.data);
+
+                    //this.uploadLog("loadRemote", "ok");
                 },
                 fail: (e) => {
                     this.gotError = true;
                     this.errorDescription = "net: " + e;
+
+                    //interconnect.send({
+                    //    data: { data: this.errorDescription },
+                    //})
+
                     this.dataList.push({
-                        src: '' + e,
+                        src: this.errorDescription,
                         id: 0
                     });
+
+                    //this.uploadLog("loadRemote", this.errorDescription);
                 }
             });
         }
         else {
             file.readText({
-                uri: URI_PLAYLIST,
+                uri: URI_PLAYLIST +"_"+ this.album +".txt",
                 success: (e) => {
 
                     let data = JSON.parse(e.text);
@@ -97,8 +112,13 @@ export default {
                 fail: (e) => {
                     this.gotError = true;
                     this.errorDescription = "fs: " + e;
+
+                    //interconnect.send({
+                    //    data: { data: this.errorDescription },
+                    //})
+
                     this.dataList.push({
-                        src: 'fs: ' + e,
+                        src: this.errorDescription,
                         id: 0
                     });
                 }
@@ -114,7 +134,7 @@ export default {
             if (this.fileList.length > 0) {
                 //index = this.fileList.findIndex(s => s.id == song.id);
                 for (let i = 0; i < this.fileList.length; i++) {
-                    if (this.fileList[i].id == song.id) {
+                    if (this.fileList[i].id == this.album +"_"+ song.id) {
                         index = i;
                         break;
                     }
@@ -157,6 +177,16 @@ export default {
         });
     },
 
+    uploadLog(name, str) {
+
+        //if (this.isWifiAvailable) {
+            fetch.fetch({
+                url: this.baseUrl + "/micolor/log/" + str,
+                method: "GET"
+            });
+        //}
+    },
+
     downloadFile(eid) {
         let itemId = Number(eid)-1;
 
@@ -166,8 +196,8 @@ export default {
         this.downloading = true;
 
         request.download({
-            url: this.baseUrl + "/micolor/get/"+ eid,
-            filename: "internal://app/"+ eid + ".mp3",
+            url: this.baseUrl + "/app/get?album="+ this.album +"&id="+ eid,
+            filename: "internal://app/"+ this.album +"_"+ eid + ".mp3",
             success: (e) => {
                 this.titleBgColor = "#000033";
                 this.dataList[itemId].icon = ICON_DOWNLOAD_ACTIVE;
@@ -181,7 +211,7 @@ export default {
                 this.downloading = false;
 
                 file.delete({
-                    uri: "internal://app/"+ eid + ".mp3"
+                    uri: "internal://app/"+ this.album +"_"+ eid + ".mp3"
                 });
             },
             onDownLoadNotify: (e) => {
@@ -203,7 +233,7 @@ export default {
 
     playFile(eid) {
         let itemId = Number(eid)-1;
-        let audioName = "internal://app/"+ eid +".mp3";
+        let audioName = "internal://app/"+ this.album +"_"+ eid +".mp3";
         audio.stop();
         audio.src = audioName;
         audio.play();
@@ -237,6 +267,14 @@ export default {
 
                 this.playerStatus = "ready";
                 this.clearScrollTimer();
+
+                // continue to play by playlist
+                // todo: check next file available
+                if ((eid < this.dataList.length) &&
+                    (this.dataList[this.activeItemId + 1].status == "ready"))
+                {
+                    this.playFile(eid + 1);
+                }
             }
         };
 

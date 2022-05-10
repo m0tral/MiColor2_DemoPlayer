@@ -1,6 +1,7 @@
 import app from '@system.app';
 import brightness from '@system.brightness';
 import router from '@system.router';
+import interconnect from '@system.interconnect';
 
 export default {
     data: {
@@ -12,13 +13,22 @@ export default {
     },
 
     onInit() {
-        this.setTime();
+        router.replace({
+            uri: "pages/list/index"
+        });
+
+        //this.setTime();
     },
 
     onShow() {
+
         brightness.setKeepScreenOn({ keepScreenOn: true });
 
         this.refreshTime();
+
+        //interconnect.send({
+        //    data: { data: "1234567890" },
+        //})
     },
 
     touchMove(e) {

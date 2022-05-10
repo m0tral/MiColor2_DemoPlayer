@@ -1,23 +1,94 @@
+import app from '@system.app';
 import router from '@system.router';
+import network from '@system.network';
+import fetch from '@system.fetch';
+import file from '@system.file';
+
+const URI_DIRLIST = "internal://app/albumList.txt";
 
 export default {
     data: {
-        title: 'test',
+        title: 'Music',
         columns: 2,
         dataList: [],
         tempList: [],
         beginIndex: 0,
         endIndex: 0,
+        isWifiAvailable: false,
+        titleBgColor: "#000000",
+        baseUrl: "https://cmod.h1n.ru",
     },
 
     onInit() {
+
         this.dataList.push({
-                src: 'file',
-                id: 'file'
+            src: 'file',
+            id: 'file'
+        });
+
+        this.dataList.push({
+            src: 'lst: music',
+            id: 'music'
+        });
+
+        network.subscribe({
+            type: "WIFI",
+            callback: (e) => {
+                this.isWifiAvailable = e;
+                if (this.isWifiAvailable) {
+                    this.titleBgColor = "#003300";
+                }
+
+                this.loadRemoteList();
+            },
+        });
+    },
+
+    onHide() {
+        network.unsubscribe({type: "WIFI"});
+    },
+
+    loadRemoteList() {
+
+        if (this.isWifiAvailable) {
+
+            fetch.fetch({
+                url: this.baseUrl + "/app/dir",
+                method: "GET",
+                success: (e) => {
+
+                    let jsonText = JSON.stringify(e.data);
+
+                    file.writeText({
+                        uri: URI_DIRLIST,
+                        text: jsonText
+                    });
+
+                    this.updateDirList(e.data);
+                }
             });
-        this.dataList.push({
-            src: 'network',
-            id: 'network'
+        }
+        else {
+            file.readText({
+                uri: URI_DIRLIST,
+                success: (e) => {
+
+                    let data = JSON.parse(e.text);
+                    this.updateDirList(data);
+                }
+            });
+        }
+    },
+
+    updateDirList(data) {
+
+        //if (this.dataList.length > 2) return;
+
+        data.forEach((song) => {
+            this.dataList.push({
+                src: "lst: "+ song.msg,
+                id: song.msg
+            });
         });
     },
 
@@ -28,16 +99,18 @@ export default {
     onItemClick(e) {
         if (e == "file")
             router.replace({uri: "pages/file/index", params: { src: e } });
-        if (e == "network")
+        if (e != "file")
             router.replace({uri: "pages/network/index", params: { src: e } });
     },
 
     touchMove(e) {
         if (e.direction == "right") {
 
-            router.replace({
-                uri: "pages/index/index"
-            });
+            app.terminate();
+
+            //router.replace({
+            //    uri: "pages/index/index"
+            //});
         }
     },
 

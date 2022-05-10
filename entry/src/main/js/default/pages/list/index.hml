@@ -1,7 +1,7 @@
 <div class="container" >
-    <div class="head" on:click="onTitleClick">
+    <div class="head" on:click="onTitleClick" style="background-color:{{ titleBgColor }};">
         <text class="title">
-            List {{ title }}
+            {{ title }}
         </text>
     </div>
     <list id="imglist" class="listData" on:swipe="touchMove">
