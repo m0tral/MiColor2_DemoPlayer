@@ -3,8 +3,11 @@ import router from '@system.router';
 import network from '@system.network';
 import fetch from '@system.fetch';
 import file from '@system.file';
+import dev from '@system.device';
 
 const URI_DIRLIST = "internal://app/albumList.txt";
+const USER_AGENT = "miwatch app.player v1.3";
+const APP_DIR = "app.player";
 
 export default {
     data: {
@@ -16,10 +19,18 @@ export default {
         endIndex: 0,
         isWifiAvailable: false,
         titleBgColor: "#000000",
-        baseUrl: "https://cmod.h1n.ru",
+        baseUrl: "http://miwatch.corout.in",
+        request_get_directory: "/"+ APP_DIR +"/dir.php",
+        sn: "",
     },
 
     onInit() {
+
+        dev.getInfo({
+            success: (options) => {
+                this.sn = options.IMEI;
+            }
+        });
 
         this.dataList.push({
             src: 'file',
@@ -53,8 +64,9 @@ export default {
         if (this.isWifiAvailable) {
 
             fetch.fetch({
-                url: this.baseUrl + "/app/dir",
+                url: this.baseUrl + this.request_get_directory +"?sn="+ this.sn,
                 method: "GET",
+                header: { "User-Agent": USER_AGENT},
                 success: (e) => {
 
                     let jsonText = JSON.stringify(e.data);
@@ -65,6 +77,12 @@ export default {
                     });
 
                     this.updateDirList(e.data);
+                },
+                fail: (e) => {
+                    this.dataList.push({
+                        src: "e:"+ e,
+                        id: 0
+                    });
                 }
             });
         }

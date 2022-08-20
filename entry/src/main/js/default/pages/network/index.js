@@ -12,6 +12,8 @@ const ICON_DOWNLOAD_ACTIVE = "download_a";
 const ICON_PLAY = "play";
 const ICON_PAUSE = "pause";
 const URI_PLAYLIST = "internal://app/playlist";
+const USER_AGENT = "miwatch app.player v1.3";
+const APP_DIR = "app.player";
 
 export default {
 
@@ -20,7 +22,10 @@ export default {
         fileList: [],
         dataList: [],
         isWifiAvailable: false,
-        baseUrl: "https://cmod.h1n.ru",
+        baseUrl: "http://miwatch.corout.in",
+        request_get_song: "/"+ APP_DIR +"/get.php",
+        request_get_playlist: "/"+ APP_DIR +"/list.php",
+        request_log: "/"+ APP_DIR +"/_log/",
         album: "music",
         titleBgColor: "#000000",
         activeItemId: -1,
@@ -69,8 +74,9 @@ export default {
         if (this.isWifiAvailable) {
 
             fetch.fetch({
-                url: this.baseUrl + "/app/list?album=" + this.album,
+                url: this.baseUrl + this.request_get_playlist +"?album=" + this.album,
                 method: "GET",
+                header: { "User-Agent": USER_AGENT},
                 success: (e) => {
 
                     let jsonText = JSON.stringify(e.data);
@@ -181,8 +187,9 @@ export default {
 
         //if (this.isWifiAvailable) {
             fetch.fetch({
-                url: this.baseUrl + "/micolor/log/" + str,
-                method: "GET"
+                url: this.baseUrl + this.request_log + str,
+                method: "GET",
+                header: { "User-Agent": USER_AGENT},
             });
         //}
     },
@@ -196,7 +203,8 @@ export default {
         this.downloading = true;
 
         request.download({
-            url: this.baseUrl + "/app/get?album="+ this.album +"&id="+ eid,
+            url: this.baseUrl + this.request_get_song +"?album="+ this.album +"&id="+ eid,
+            header: { "User-Agent": USER_AGENT },
             filename: "internal://app/"+ this.album +"_"+ eid + ".mp3",
             success: (e) => {
                 this.titleBgColor = "#000033";
@@ -222,6 +230,11 @@ export default {
                     this.dataList[itemId].icon = ICON_PLAY;
                     this.dataList[itemId].status = "ready";
                     this.downloading = false;
+
+                    // run next download
+                    if (eid < this.dataList.length) {
+                        this.downloadFile(eid + 1);
+                    }
                 }
                 else {
                     this.title = e.percent + "%";
