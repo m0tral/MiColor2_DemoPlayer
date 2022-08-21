@@ -1,65 +1,35 @@
 import app from '@system.app';
 import brightness from '@system.brightness';
 import router from '@system.router';
+import storage from '@system.storage';
 import interconnect from '@system.interconnect';
+
+const BindKey = "bindkey";
 
 export default {
     data: {
-        hour: '00',
-        min: '00',
-        sec: '00',
-
-        intervalId: -1
     },
 
     onInit() {
-        router.replace({
-            uri: "pages/list/index"
-        });
-
-        //this.setTime();
     },
 
     onShow() {
 
         brightness.setKeepScreenOn({ keepScreenOn: true });
 
-        this.refreshTime();
-
-        //interconnect.send({
-        //    data: { data: "1234567890" },
-        //})
+        storage.get({
+            key: BindKey,
+            success: (e) => {
+                router.replace({
+                    uri: "pages/list/index"
+                });
+            }
+        });
     },
 
     touchMove(e) {
         if (e.direction == "right") {
-
-            if (this.intervalId != -1)
-                clearInterval(this.intervalId);
-
             app.terminate();
         }
-        else if (e.direction == "left") {
-            router.replace({
-                uri: "pages/list/index"
-            });
-        }
-    },
-
-    refreshTime() {
-
-        this.intervalId = setInterval(() => {
-            this.setTime();
-        }, 1000);
-    },
-
-    setTime() {
-        var time = new Date();
-        var h = time.getHours();
-        this.hour = h < 10 ? "0"+h : h;
-        var m = time.getMinutes();
-        this.min = m < 10 ? "0"+m : m;
-        var s = time.getSeconds();
-        this.sec = s < 10 ? "0"+s : s;
     }
 }

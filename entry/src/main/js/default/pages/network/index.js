@@ -11,6 +11,7 @@ const ICON_DOWNLOAD = "download";
 const ICON_DOWNLOAD_ACTIVE = "download_a";
 const ICON_PLAY = "play";
 const ICON_PAUSE = "pause";
+const URI_SERVER = "http://miwatch.corout.in";
 const URI_PLAYLIST = "internal://app/playlist";
 const USER_AGENT = "miwatch app.player v1.3";
 const APP_DIR = "app.player";
@@ -22,7 +23,7 @@ export default {
         fileList: [],
         dataList: [],
         isWifiAvailable: false,
-        baseUrl: "http://miwatch.corout.in",
+        baseUrl: URI_SERVER,
         request_get_song: "/"+ APP_DIR +"/get.php",
         request_get_playlist: "/"+ APP_DIR +"/list.php",
         request_log: "/"+ APP_DIR +"/_log/",

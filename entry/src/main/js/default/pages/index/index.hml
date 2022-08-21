@@ -1,6 +1,6 @@
 <div class="container" on:swipe="touchMove">
     <text class="title">
-        Clock
+        Welcome
     </text>
     <text class="clock">
         {{ hour }}:{{ min }}:{{ sec }}
