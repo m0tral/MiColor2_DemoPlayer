@@ -2,7 +2,6 @@ import app from '@system.app';
 import brightness from '@system.brightness';
 import router from '@system.router';
 import storage from '@system.storage';
-import interconnect from '@system.interconnect';
 
 const BindKey = "bindkey";
 
@@ -16,6 +15,12 @@ export default {
     onShow() {
 
         brightness.setKeepScreenOn({ keepScreenOn: true });
+        setTimeout(this.startActivity, 2000);
+
+        storage.delete({ key: BindKey});
+    },
+
+    startActivity() {
 
         storage.get({
             key: BindKey,
@@ -23,7 +28,12 @@ export default {
                 router.replace({
                     uri: "pages/list/index"
                 });
-            }
+            },
+            fail: (e) => {
+                router.replace({
+                    uri: "pages/login/index"
+                });
+            },
         });
     },
 

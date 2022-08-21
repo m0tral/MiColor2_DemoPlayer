@@ -4,7 +4,7 @@
     "vendor": "m0tral",
     "version": {
       "code": 4,
-      "name": "1.0"
+      "name": "1.4"
     }
   },
   "deviceConfig": {},
@@ -29,6 +29,7 @@
       {
         "pages": [
           "pages/index/index",
+          "pages/login/index",
           "pages/list/index",
           "pages/file/index",
           "pages/network/index"

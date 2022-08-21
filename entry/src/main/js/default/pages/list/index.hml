@@ -7,7 +7,7 @@
     <list id="imglist" class="listData" on:swipe="touchMove">
         <list-item type="listItem" for="{{dataList}}" class="listItem" >
             <stack class="stackItem">
-                <image class="itemBack" src="/res/images/icon_download.png"
+                <image class="itemBack" src="/res/images/icon_songlist.png"
                        onclick="onItemClick({{$item.id}})"></image>
                 <text class="itemName">{{$item.src}}</text>
             </stack>

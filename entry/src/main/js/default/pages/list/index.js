@@ -6,7 +6,7 @@ import file from '@system.file';
 import dev from '@system.device';
 
 const URI_DIRLIST = "internal://app/albumList.txt";
-const USER_AGENT = "miwatch app.player v1.3";
+const USER_AGENT = "miwatch app.player v1.4";
 const APP_DIR = "app.player";
 
 export default {
@@ -33,12 +33,12 @@ export default {
         });
 
         this.dataList.push({
-            src: 'file',
+            src: 'file manager',
             id: 'file'
         });
 
         this.dataList.push({
-            src: 'lst: music',
+            src: 'music',
             id: 'music'
         });
 

@@ -1,8 +1,7 @@
 <div class="container" on:swipe="touchMove">
     <text class="title">
-        Welcome
+Welcome to
+Music Player
     </text>
-    <text class="clock">
-        {{ hour }}:{{ min }}:{{ sec }}
-    </text>
+    <text class="version">v1.4</text>
 </div>
