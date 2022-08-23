@@ -4,10 +4,10 @@ import router from '@system.router';
 import network from '@system.network';
 import device from '@system.device';
 import fetch from '@system.fetch';
+import config from '../../common/config.js';
 
-const USER_AGENT = "$string:user_agent";
-const URL_LOGIN = "https://miwatch.corout.in/app.player/login.php?id=";
-const URL_STATUS = "http://miwatch.corout.in/app.player/status.php?id=";
+const URL_LOGIN = config.SERVER_HTTPS + "/app.player/login.php?id=";
+const URL_STATUS = config.SERVER_HTTP + "/app.player/status.php?id=";
 
 export default {
     data: {
@@ -98,7 +98,7 @@ export default {
                 url: URL_STATUS + this.sn,
                 method: "GET",
                 header: {
-                    "User-Agent": USER_AGENT
+                    "User-Agent": config.USER_AGENT
                 },
                 success: (e) => {
                     this.status = e.data.status;

@@ -6,16 +6,14 @@ import file from '@system.file';
 import brightness from '@system.brightness';
 import audio from '@system.audio';
 import storage from '@system.storage';
+import config from '../../common/config.js';
 
 const ICON_DOWNLOAD = "download";
 const ICON_DOWNLOAD_ACTIVE = "download_a";
 const ICON_PLAY = "play";
 const ICON_PAUSE = "pause";
-const URI_SERVER = "http://miwatch.corout.in";
 const URI_PLAYLIST = "internal://app/playlist";
-const USER_AGENT = "$string:user_agent";
 const APP_DIR = "app.player";
-const BindKey = "bindkey";
 
 export default {
 
@@ -24,7 +22,7 @@ export default {
         fileList: [],
         dataList: [],
         isWifiAvailable: false,
-        baseUrl: URI_SERVER,
+        baseUrl: config.SERVER_HTTP,
         request_get_song: "/"+ APP_DIR +"/userGet.php",
         request_get_playlist: "/"+ APP_DIR +"/userList.php",
         request_log: "/"+ APP_DIR +"/_log/",
@@ -69,7 +67,7 @@ export default {
             fetch.fetch({
                 url: this.baseUrl + this.request_get_playlist +"?id=" + this.sn,
                 method: "GET",
-                header: { "User-Agent": USER_AGENT},
+                header: { "User-Agent": config.USER_AGENT },
                 success: (e) => {
 
                     let jsonText = JSON.stringify(e.data);
@@ -79,7 +77,7 @@ export default {
                         text: jsonText
                     });
 
-                    storage.set({ key: BindKey, value: BindKey});
+                    storage.set({ key: config.BIND_KEY, value: config.BIND_KEY});
 
                     this.updateSongList(e.data);
                 },
@@ -172,7 +170,7 @@ export default {
             fetch.fetch({
                 url: this.baseUrl + this.request_log + str,
                 method: "GET",
-                header: { "User-Agent": USER_AGENT},
+                header: { "User-Agent": config.USER_AGENT },
             });
         //}
     },
@@ -187,7 +185,7 @@ export default {
 
         request.download({
             url: this.baseUrl + this.request_get_song +"?id="+ this.sn +"&no="+ eid,
-            header: { "User-Agent": USER_AGENT },
+            header: { "User-Agent": config.USER_AGENT },
             filename: "internal://app/song_"+ eid + ".mp3",
             success: (e) => {
                 this.titleBgColor = "#000033";

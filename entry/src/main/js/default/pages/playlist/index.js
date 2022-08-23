@@ -4,16 +4,16 @@ import network from '@system.network';
 import fetch from '@system.fetch';
 import file from '@system.file';
 import dev from '@system.device';
+import config from '../../common/config.js';
 
 const URI_DIRLIST = "internal://app/albumList.txt";
-const USER_AGENT = "$string:user_agent";
 const APP_DIR = "app.player";
 
 export default {
     data: {
         isWifiAvailable: false,
         show_sync: true,
-        baseUrl: "http://miwatch.corout.in",
+        baseUrl: config.SERVER_HTTP,
         request_get_directory: "/"+ APP_DIR +"/dir.php",
         sn: "",
     },
@@ -46,7 +46,7 @@ export default {
             fetch.fetch({
                 url: this.baseUrl + this.request_get_directory +"?sn="+ this.sn,
                 method: "GET",
-                header: { "User-Agent": USER_AGENT},
+                header: { "User-Agent": config.USER_AGENT },
                 success: (e) => {
 
                     let jsonText = JSON.stringify(e.data);

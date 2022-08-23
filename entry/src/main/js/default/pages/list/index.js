@@ -4,9 +4,6 @@ import device from '@system.device';
 import storage from '@system.storage';
 import file from '@system.file';
 
-const BindKey = "bindkey";
-const APP_DIR = "app.player";
-
 export default {
     data: {
         title: 'Settings',
@@ -73,7 +70,7 @@ export default {
             router.replace({uri: "pages/network/index", params: { src: this.sn } });
         if (e == "reload") {
 
-            storage.delete({ key: BindKey });
+            storage.clear();
             this.deleteExistFiles();
 
             router.replace({

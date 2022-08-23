@@ -3,8 +3,7 @@ import brightness from '@system.brightness';
 import router from '@system.router';
 import storage from '@system.storage';
 import device from '@system.device';
-
-const BindKey = "bindkey";
+import config from '../../common/config.js';
 
 export default {
     data: {
@@ -29,7 +28,7 @@ export default {
     startActivity() {
 
         storage.get({
-            key: BindKey,
+            key: config.BIND_KEY,
             success: (e) => {
                 router.replace({
                     uri: "pages/network/index",
