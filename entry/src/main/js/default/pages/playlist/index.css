@@ -6,10 +6,13 @@
     align-items: center;
 }
 
-.title {
-    width: 400px;
-    text-align: center;
+.stack {
+    width: 300px;
+    height: 400px;
 }
-.version {
-    color: darkgray;
+
+.syncing {
+    width: 300px;
+    top: 150px;
+    text-align: center;
 }

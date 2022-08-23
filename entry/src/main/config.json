@@ -3,8 +3,8 @@
     "bundleName": "com.m0tral.music",
     "vendor": "m0tral",
     "version": {
-      "code": 4,
-      "name": "1.4"
+      "code": 5,
+      "name": "1.5"
     }
   },
   "deviceConfig": {},
@@ -30,6 +30,7 @@
         "pages": [
           "pages/index/index",
           "pages/login/index",
+          "pages/playlist/index",
           "pages/list/index",
           "pages/file/index",
           "pages/network/index"

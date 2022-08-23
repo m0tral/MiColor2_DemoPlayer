@@ -3,6 +3,10 @@
     {
       "name": "app_title",
       "value": "Music player"
+    },
+    {
+      "name": "user_agent",
+      "value": "miwatch app.player v1.5"
     }
   ]
 }

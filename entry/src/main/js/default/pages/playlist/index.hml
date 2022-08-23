@@ -1,0 +1,8 @@
+<div class="container" on:swipe="touchMove">
+    <stack class="stack">
+        <text class="syncing" show="{{show_sync}}">
+Syncing a music.
+Please wait..
+        </text>
+    </stack>
+</div>

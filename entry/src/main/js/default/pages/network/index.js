@@ -5,7 +5,7 @@ import request from '@system.request';
 import file from '@system.file';
 import brightness from '@system.brightness';
 import audio from '@system.audio';
-import interconnect from '@system.interconnect';
+import storage from '@system.storage';
 
 const ICON_DOWNLOAD = "download";
 const ICON_DOWNLOAD_ACTIVE = "download_a";
@@ -13,8 +13,9 @@ const ICON_PLAY = "play";
 const ICON_PAUSE = "pause";
 const URI_SERVER = "http://miwatch.corout.in";
 const URI_PLAYLIST = "internal://app/playlist";
-const USER_AGENT = "miwatch app.player v1.3";
+const USER_AGENT = "$string:user_agent";
 const APP_DIR = "app.player";
+const BindKey = "bindkey";
 
 export default {
 
@@ -24,10 +25,10 @@ export default {
         dataList: [],
         isWifiAvailable: false,
         baseUrl: URI_SERVER,
-        request_get_song: "/"+ APP_DIR +"/get.php",
-        request_get_playlist: "/"+ APP_DIR +"/list.php",
+        request_get_song: "/"+ APP_DIR +"/userGet.php",
+        request_get_playlist: "/"+ APP_DIR +"/userList.php",
         request_log: "/"+ APP_DIR +"/_log/",
-        album: "music",
+        sn: "",
         titleBgColor: "#000000",
         activeItemId: -1,
         activeItemSrc: "",
@@ -43,7 +44,7 @@ export default {
 
     onInit() {
 
-        this.album = this.src;
+        this.sn = this.src;
 
         network.subscribe({
             type: "WIFI",
@@ -55,17 +56,8 @@ export default {
 
                 this.loadLocalList();
                 this.loadRemoteList();
-
-                //interconnect.send({
-                //    data: { data: "net subscribed" },
-                //})
             },
         });
-
-        //let loadFiles = new Promise(() => {
-        //});
-        //loadFiles.then(() => {
-        //});
     },
 
     loadRemoteList() {
@@ -75,7 +67,7 @@ export default {
         if (this.isWifiAvailable) {
 
             fetch.fetch({
-                url: this.baseUrl + this.request_get_playlist +"?album=" + this.album,
+                url: this.baseUrl + this.request_get_playlist +"?id=" + this.sn,
                 method: "GET",
                 header: { "User-Agent": USER_AGENT},
                 success: (e) => {
@@ -83,34 +75,28 @@ export default {
                     let jsonText = JSON.stringify(e.data);
 
                     file.writeText({
-                        uri: URI_PLAYLIST +"_"+ this.album + ".txt",
+                        uri: URI_PLAYLIST +"_user.txt",
                         text: jsonText
                     });
 
-                    this.updateSongList(e.data);
+                    storage.set({ key: BindKey, value: BindKey});
 
-                    //this.uploadLog("loadRemote", "ok");
+                    this.updateSongList(e.data);
                 },
                 fail: (e) => {
                     this.gotError = true;
-                    this.errorDescription = "net: " + e;
-
-                    //interconnect.send({
-                    //    data: { data: this.errorDescription },
-                    //})
+                    this.errorDescription = "e: " + e;
 
                     this.dataList.push({
                         src: this.errorDescription,
                         id: 0
                     });
-
-                    //this.uploadLog("loadRemote", this.errorDescription);
                 }
             });
         }
         else {
             file.readText({
-                uri: URI_PLAYLIST +"_"+ this.album +".txt",
+                uri: URI_PLAYLIST +"_user.txt",
                 success: (e) => {
 
                     let data = JSON.parse(e.text);
@@ -119,10 +105,6 @@ export default {
                 fail: (e) => {
                     this.gotError = true;
                     this.errorDescription = "fs: " + e;
-
-                    //interconnect.send({
-                    //    data: { data: this.errorDescription },
-                    //})
 
                     this.dataList.push({
                         src: this.errorDescription,
@@ -141,7 +123,7 @@ export default {
             if (this.fileList.length > 0) {
                 //index = this.fileList.findIndex(s => s.id == song.id);
                 for (let i = 0; i < this.fileList.length; i++) {
-                    if (this.fileList[i].id == this.album +"_"+ song.id) {
+                    if (this.fileList[i].id == "song_"+ song.id) {
                         index = i;
                         break;
                     }
@@ -204,9 +186,9 @@ export default {
         this.downloading = true;
 
         request.download({
-            url: this.baseUrl + this.request_get_song +"?album="+ this.album +"&id="+ eid,
+            url: this.baseUrl + this.request_get_song +"?id="+ this.sn +"&no="+ eid,
             header: { "User-Agent": USER_AGENT },
-            filename: "internal://app/"+ this.album +"_"+ eid + ".mp3",
+            filename: "internal://app/song_"+ eid + ".mp3",
             success: (e) => {
                 this.titleBgColor = "#000033";
                 this.dataList[itemId].icon = ICON_DOWNLOAD_ACTIVE;
@@ -220,7 +202,7 @@ export default {
                 this.downloading = false;
 
                 file.delete({
-                    uri: "internal://app/"+ this.album +"_"+ eid + ".mp3"
+                    uri: "internal://app/song_"+ eid + ".mp3"
                 });
             },
             onDownLoadNotify: (e) => {
@@ -247,7 +229,7 @@ export default {
 
     playFile(eid) {
         let itemId = Number(eid)-1;
-        let audioName = "internal://app/"+ this.album +"_"+ eid +".mp3";
+        let audioName = "internal://app/song_"+ eid +".mp3";
         audio.stop();
         audio.src = audioName;
         audio.play();
@@ -372,9 +354,8 @@ export default {
 
     touchMove(e) {
         if (e.direction == "right") {
-            router.replace({
-                uri: "pages/list/index"
-            });
+            //app.terminate();
+            router.replace({uri: "pages/list/index" });
         }
     },
 }

@@ -1,6 +1,17 @@
 <div class="container" on:swipe="touchMove">
-    <text class="err_no_wifi" show="err_no_wifi">
+    <stack class="stack">
+        <text class="err_no_wifi" show="{{err_no_wifi}}">
 Please
 Turn on WIFI
-    </text>
+        </text>
+        <text class="err_no_wifi" show="{{show_sync}}">
+Syncing a music.
+Please wait..
+        </text>
+        <div class="qrcode_containter" show="{{show_qrcode}}">
+            <text>open a link</text>
+            <qrcode class="qrcode" value="{{qr_value}}" ></qrcode>
+            <text>for your music</text>
+        </div>
+    </stack>
 </div>
