@@ -3,5 +3,5 @@
 Welcome to
 Music Player
     </text>
-    <text class="version">v1.4</text>
+    <text class="version">{{version}}</text>
 </div>

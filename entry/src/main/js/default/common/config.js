@@ -5,6 +5,7 @@ export default {
     SERVER_HTTPS: "https://miwatch.corout.in",
 
     USER_AGENT: "miwatch app.player v1.5",
+    VERSION: "v1.5",
 
-    BIND_KEY: "bind_flag"
+    BIND_KEY: "bind_flag",
 }

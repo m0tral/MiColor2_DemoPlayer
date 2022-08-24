@@ -4,9 +4,11 @@ import router from '@system.router';
 import storage from '@system.storage';
 import device from '@system.device';
 import config from '../../common/config.js';
+import logger from '../../common/logger.js';
 
 export default {
     data: {
+        version: config.VERSION,
         sn: "",
     },
 
@@ -23,6 +25,8 @@ export default {
 
         brightness.setKeepScreenOn({ keepScreenOn: true });
         setTimeout(this.startActivity, 2000);
+
+        logger.sendMessage("index started");
     },
 
     startActivity() {
